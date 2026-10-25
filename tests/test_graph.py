@@ -16,8 +16,11 @@ def make(store_data, triage, turns, drafts=(OK_DRAFT,)):
 
 
 def test_small_refund_runs_without_pause(store_data):
-    turns = [tool_turn(("get_order", {"order_id": "ORD-1"})),
-             tool_turn(("issue_refund", {"order_id": "ORD-1", "amount": 20.0})), DONE]
+    turns = [
+        tool_turn(("get_order", {"order_id": "ORD-1"})),
+        tool_turn(("issue_refund", {"order_id": "ORD-1", "amount": 20.0})),
+        DONE,
+    ]
     graph, store, _ = make(store_data, REFUND, turns)
     out = run_ticket(graph, "refund ORD-1", "t1")
     assert out["pauses"] == []
@@ -27,8 +30,11 @@ def test_small_refund_runs_without_pause(store_data):
 
 
 def test_big_refund_pauses_and_approval_issues_it(store_data):
-    turns = [tool_turn(("get_order", {"order_id": "ORD-2"})),
-             tool_turn(("issue_refund", {"order_id": "ORD-2", "amount": 199.0})), DONE]
+    turns = [
+        tool_turn(("get_order", {"order_id": "ORD-2"})),
+        tool_turn(("issue_refund", {"order_id": "ORD-2", "amount": 199.0})),
+        DONE,
+    ]
     graph, store, _ = make(store_data, REFUND, turns)
     config = {"configurable": {"thread_id": "t2"}}
     graph.invoke({"ticket": "refund ORD-2"}, config)
@@ -72,8 +78,13 @@ def test_agent_turn_limit_stops_loops(store_data):
 
 def test_refund_outcome_and_check_draft():
     assert "No refund" in refund_outcome([])
-    log = [{"name": "issue_refund", "args": {"order_id": "ORD-1"},
-            "result": {"success": True, "refund_id": "RF-0001", "order_id": "ORD-1", "amount": 20.0}}]
+    log = [
+        {
+            "name": "issue_refund",
+            "args": {"order_id": "ORD-1"},
+            "result": {"success": True, "refund_id": "RF-0001", "order_id": "ORD-1", "amount": 20.0},
+        }
+    ]
     assert "RF-0001" in refund_outcome(log)
     assert check_draft("I've processed your refund.", log) is None
     assert check_draft("I've processed your refund.", []) is not None

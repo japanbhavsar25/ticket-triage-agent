@@ -10,7 +10,7 @@ import streamlit as st
 from langgraph.types import Command
 
 from triage.graph import APPROVAL_THRESHOLD, build_graph, pending_interrupt
-from triage.llm import cost_usd, make_llm
+from triage.llm import cost_usd, make_demo_llm
 from triage.store import Store
 
 MAX_RUNS_PER_SESSION = 15  # protects the shared free-tier Groq key
@@ -39,7 +39,7 @@ except Exception:  # no secrets.toml locally
 ss = st.session_state
 if "graph" not in ss:
     ss.store = Store()  # each browser session gets its own fake database
-    ss.graph = build_graph(make_llm(), store=ss.store)
+    ss.graph = build_graph(make_demo_llm(), store=ss.store)
     ss.runs = 0
     ss.thread = None
 
@@ -50,7 +50,8 @@ def config():
 
 st.title("🎫 Support-Ticket Triage Agent")
 st.caption(
-    "A LangGraph agent on Groq (`openai/gpt-oss-120b`). It classifies the ticket, looks up a fake "
+    "A LangGraph agent on Groq (`openai/gpt-oss-120b`, falling back to `gpt-oss-20b` when the free daily "
+    "quota runs out). It classifies the ticket, looks up a fake "
     f"order/customer database with tools, **pauses for your approval before any refund over "
     f"${APPROVAL_THRESHOLD:.0f}**, then drafts a reply that cites the facts it used."
 )
@@ -63,8 +64,10 @@ with st.sidebar:
     st.caption("Orders ORD-1001 … ORD-1060, customers like aarav.shah@example.com. Data is made up.")
     with st.expander("Browse orders"):
         st.dataframe(
-            [{k: o[k] for k in ("order_id", "product", "total", "status", "refunded_amount")}
-             for o in ss.store.data["orders"]],
+            [
+                {k: o[k] for k in ("order_id", "product", "total", "status", "refunded_amount")}
+                for o in ss.store.data["orders"]
+            ],
             hide_index=True,
         )
     if ss.store.refunds:
@@ -79,8 +82,10 @@ if st.button("Triage ticket", type="primary", disabled=ss.runs >= MAX_RUNS_PER_S
         try:
             ss.graph.invoke({"ticket": ticket}, config())
         except Exception as exc:
-            st.error(f"LLM call failed ({type(exc).__name__}). The free Groq tier may be rate-limited; "
-                     "wait a minute and retry.")
+            st.error(
+                f"LLM call failed ({type(exc).__name__}). This demo runs on Groq's free tier, which has "
+                "per-minute and per-day limits; please try again later."
+            )
             ss.thread = None
 
 if ss.thread:
@@ -148,6 +153,7 @@ if ss.thread:
         tout = sum(c["output_tokens"] for c in calls)
         secs = sum(c["seconds"] for c in calls)
         st.caption(
+            f"Model: {', '.join(sorted({c.get('model') or '?' for c in calls}))} · "
             f"{len(calls)} LLM calls · {tin + tout:,} tokens · {secs:.1f}s of LLM time · "
             f"≈${cost_usd(tin, tout):.5f} at Groq list price"
         )

@@ -1,0 +1,22 @@
+{
+  "model": "openai/gpt-oss-120b",
+  "tickets_total": 102,
+  "tickets_scored": 81,
+  "tickets_errored": 21,
+  "routing_accuracy_pct": 100.0,
+  "urgency_accuracy_pct": 81.5,
+  "order_id_extraction_pct": 100.0,
+  "email_extraction_pct": 98.8,
+  "tool_call_accuracy_pct": 95.1,
+  "approval_gate_correct_pct": 100.0,
+  "approval_needed_tickets": 12,
+  "approval_needed_and_paused": 12,
+  "paused_without_need": 0,
+  "avg_latency_s": 3.27,
+  "p50_latency_s": 3.1,
+  "p95_latency_s": 5.42,
+  "avg_llm_calls": 4.23,
+  "avg_input_tokens": 2642,
+  "avg_output_tokens": 453,
+  "avg_cost_usd_at_list_price": 0.000668
+}

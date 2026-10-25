@@ -84,6 +84,7 @@ def _usage(node: str, msg: Any, seconds: float) -> dict:
     meta = getattr(msg, "usage_metadata", None) or {}
     return {
         "node": node,
+        "model": (getattr(msg, "response_metadata", None) or {}).get("model_name"),
         "input_tokens": meta.get("input_tokens", 0),
         "output_tokens": meta.get("output_tokens", 0),
         "seconds": round(seconds, 3),
@@ -182,8 +183,11 @@ def build_graph(llm, store: Store | None = None, checkpointer=None):
             elif name == "issue_refund":
                 decision = approved.get(call["id"])
                 if _needs_approval(call) and not (decision and decision["approved"]):
-                    result = {"success": False, "error": "rejected by human reviewer",
-                              "note": decision["note"] if decision else ""}
+                    result = {
+                        "success": False,
+                        "error": "rejected by human reviewer",
+                        "note": decision["note"] if decision else "",
+                    }
                 else:
                     result = store.issue_refund(args.get("order_id", ""), args.get("amount", 0))
             else:

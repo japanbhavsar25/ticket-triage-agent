@@ -50,22 +50,107 @@ def same(a, b) -> bool:
     return str(a).strip().lower() == str(b).strip().lower()
 
 
+def score(t: dict, state: dict, error: str | None, latency: float) -> dict:
+    triage = state.get("triage", {})
+    calls = state.get("llm_calls", [])
+    got_tools = Counter(norm_call(c) for c in state.get("tool_log", []))
+    want_tools = Counter(norm_call(c) for c in t["expected_tools"])
+    paused = bool(state.get("pauses"))
+    return {
+        "id": t["id"],
+        "error": error,
+        "category_ok": triage.get("category") == t["category"],
+        "urgency_ok": triage.get("urgency") == t["urgency"],
+        "order_id_ok": same(triage.get("order_id"), t["order_id"]),
+        "email_ok": same(triage.get("email"), t["email"]),
+        "tools_ok": got_tools == want_tools,
+        "approval_ok": paused == t["needs_approval"],
+        "paused": paused,
+        "needs_approval": t["needs_approval"],
+        "latency_s": round(latency, 2),
+        "input_tokens": sum(c["input_tokens"] for c in calls),
+        "output_tokens": sum(c["output_tokens"] for c in calls),
+        "llm_calls": len(calls),
+        "expected": {"category": t["category"], "urgency": t["urgency"], "tools": t["expected_tools"]},
+        "got": {
+            "category": triage.get("category"),
+            "urgency": triage.get("urgency"),
+            "tools": [{"name": c["name"], "args": c["args"]} for c in state.get("tool_log", [])],
+        },
+        "reply": state.get("draft", {}).get("reply"),
+    }
+
+
+def summarize(rows: list[dict], model: str) -> dict:
+    """Metrics over the tickets that completed. Tickets that errored (e.g. the
+    free-tier daily quota ran out) are reported separately, not counted as wrong."""
+    ok = [r for r in rows if not r["error"]]
+    n = len(ok)
+    lat = sorted(r["latency_s"] for r in ok)
+
+    def pct(key: str) -> float | None:
+        return round(100 * sum(r[key] for r in ok) / n, 1) if n else None
+
+    approval_rows = [r for r in ok if r["needs_approval"]]
+    avg_in = statistics.mean(r["input_tokens"] for r in ok) if ok else 0
+    avg_out = statistics.mean(r["output_tokens"] for r in ok) if ok else 0
+    return {
+        "model": model,
+        "tickets_total": len(rows),
+        "tickets_scored": n,
+        "tickets_errored": len(rows) - n,
+        "routing_accuracy_pct": pct("category_ok"),
+        "urgency_accuracy_pct": pct("urgency_ok"),
+        "order_id_extraction_pct": pct("order_id_ok"),
+        "email_extraction_pct": pct("email_ok"),
+        "tool_call_accuracy_pct": pct("tools_ok"),
+        "approval_gate_correct_pct": pct("approval_ok"),
+        "approval_needed_tickets": len(approval_rows),
+        "approval_needed_and_paused": sum(r["paused"] for r in approval_rows),
+        "paused_without_need": sum(r["paused"] and not r["needs_approval"] for r in ok),
+        "avg_latency_s": round(statistics.mean(lat), 2) if lat else None,
+        "p50_latency_s": lat[len(lat) // 2] if lat else None,
+        "p95_latency_s": lat[math.ceil(len(lat) * 0.95) - 1] if lat else None,
+        "avg_llm_calls": round(statistics.mean(r["llm_calls"] for r in ok), 2) if ok else None,
+        "avg_input_tokens": round(avg_in),
+        "avg_output_tokens": round(avg_out),
+        "avg_cost_usd_at_list_price": round(cost_usd(avg_in, avg_out), 6),
+    }
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int)
     ap.add_argument("--model")
+    ap.add_argument(
+        "--rerun-errors",
+        action="store_true",
+        help="re-run only the tickets that errored in results.jsonl and merge them in",
+    )
     args = ap.parse_args()
 
     tickets = [json.loads(line) for line in (ROOT / "eval" / "tickets.jsonl").read_text().splitlines()]
     if args.limit:
         tickets = tickets[: args.limit]
-    llm = make_llm(args.model)
     out_dir = ROOT / "eval" / "results"
     out_dir.mkdir(exist_ok=True)
+    results_path = out_dir / "results.jsonl"
+
+    previous: dict[str, dict] = {}
+    if args.rerun_errors:
+        previous = {r["id"]: r for r in map(json.loads, results_path.read_text().splitlines())}
+        tickets = [t for t in tickets if t["id"] not in previous or previous[t["id"]]["error"]]
+        print(f"re-running {len(tickets)} errored tickets")
+
+    llm = make_llm(args.model)
     window: deque[tuple[float, int]] = deque()  # (timestamp, tokens) for client-side pacing
-    rows = []
+    new_rows: dict[str, dict] = {}
+    quota_gone = False
 
     for i, t in enumerate(tickets, 1):
+        if quota_gone:
+            new_rows[t["id"]] = score(t, {}, "skipped: daily token quota exhausted", 0.0)
+            continue
         # Pace ourselves under the free-tier tokens-per-minute limit. Waiting time is
         # NOT counted in latency.
         while True:
@@ -81,80 +166,24 @@ def main() -> None:
         error = None
         try:
             state = run_ticket(graph, t["ticket"], thread_id=t["id"])
-        except Exception as exc:  # count the ticket as failed, keep going
+        except Exception as exc:  # record the ticket as errored, keep going
             state, error = {}, f"{type(exc).__name__}: {exc}"
+            quota_gone = "tokens per day" in str(exc)
         latency = time.perf_counter() - t0
-
-        triage = state.get("triage", {})
-        calls = state.get("llm_calls", [])
-        tin = sum(c["input_tokens"] for c in calls)
-        tout = sum(c["output_tokens"] for c in calls)
-        window.append((time.time(), tin + tout))
-        got_tools = Counter(norm_call(c) for c in state.get("tool_log", []))
-        want_tools = Counter(norm_call(c) for c in t["expected_tools"])
-        paused = bool(state.get("pauses"))
-        row = {
-            "id": t["id"],
-            "error": error,
-            "category_ok": triage.get("category") == t["category"],
-            "urgency_ok": triage.get("urgency") == t["urgency"],
-            "order_id_ok": same(triage.get("order_id"), t["order_id"]),
-            "email_ok": same(triage.get("email"), t["email"]),
-            "tools_ok": got_tools == want_tools,
-            "approval_ok": paused == t["needs_approval"],
-            "paused": paused,
-            "needs_approval": t["needs_approval"],
-            "latency_s": round(latency, 2),
-            "input_tokens": tin,
-            "output_tokens": tout,
-            "llm_calls": len(calls),
-            "expected": {"category": t["category"], "urgency": t["urgency"], "tools": t["expected_tools"]},
-            "got": {
-                "category": triage.get("category"),
-                "urgency": triage.get("urgency"),
-                "tools": [{"name": c["name"], "args": c["args"]} for c in state.get("tool_log", [])],
-            },
-            "reply": state.get("draft", {}).get("reply"),
-        }
-        rows.append(row)
+        row = score(t, state, error, latency)
+        window.append((time.time(), row["input_tokens"] + row["output_tokens"]))
+        new_rows[t["id"]] = row
         flags = "".join("." if row[k] else "x" for k in ("category_ok", "tools_ok", "approval_ok"))
-        print(f"[{i}/{len(tickets)}] {t['id']} {flags} {latency:.1f}s {tin + tout} tok {error or ''}", flush=True)
+        tok = row["input_tokens"] + row["output_tokens"]
+        print(f"[{i}/{len(tickets)}] {t['id']} {flags} {latency:.1f}s {tok} tok {(error or '')[:120]}", flush=True)
 
-    with (out_dir / "results.jsonl").open("w", encoding="utf-8") as f:
+    merged = {**previous, **new_rows}
+    rows = sorted(merged.values(), key=lambda r: r["id"])
+    with results_path.open("w", encoding="utf-8") as f:
         for r in rows:
             f.write(json.dumps(r) + "\n")
 
-    n = len(rows)
-    ok = [r for r in rows if not r["error"]]
-    lat = sorted(r["latency_s"] for r in ok)
-
-    def pct(key: str) -> float:
-        return round(100 * sum(r[key] for r in rows) / n, 1)
-
-    approval_rows = [r for r in rows if r["needs_approval"]]
-    avg_in = statistics.mean(r["input_tokens"] for r in ok) if ok else 0
-    avg_out = statistics.mean(r["output_tokens"] for r in ok) if ok else 0
-    summary = {
-        "model": llm.model_name,
-        "tickets": n,
-        "errors": n - len(ok),
-        "routing_accuracy_pct": pct("category_ok"),
-        "urgency_accuracy_pct": pct("urgency_ok"),
-        "order_id_extraction_pct": pct("order_id_ok"),
-        "email_extraction_pct": pct("email_ok"),
-        "tool_call_accuracy_pct": pct("tools_ok"),
-        "approval_gate_correct_pct": pct("approval_ok"),
-        "approval_needed_tickets": len(approval_rows),
-        "approval_needed_and_paused": sum(r["paused"] for r in approval_rows),
-        "paused_without_need": sum(r["paused"] and not r["needs_approval"] for r in rows),
-        "avg_latency_s": round(statistics.mean(lat), 2) if lat else None,
-        "p50_latency_s": lat[len(lat) // 2] if lat else None,
-        "p95_latency_s": lat[math.ceil(len(lat) * 0.95) - 1] if lat else None,
-        "avg_llm_calls": round(statistics.mean(r["llm_calls"] for r in ok), 2) if ok else None,
-        "avg_input_tokens": round(avg_in),
-        "avg_output_tokens": round(avg_out),
-        "avg_cost_usd_at_list_price": round(cost_usd(avg_in, avg_out), 6),
-    }
+    summary = summarize(rows, llm.model_name)
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
 
