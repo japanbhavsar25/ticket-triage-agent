@@ -114,7 +114,7 @@ def summarize(rows: list[dict], model: str) -> dict:
         "avg_llm_calls": round(statistics.mean(r["llm_calls"] for r in ok), 2) if ok else None,
         "avg_input_tokens": round(avg_in),
         "avg_output_tokens": round(avg_out),
-        "avg_cost_usd_at_list_price": round(cost_usd(avg_in, avg_out), 6),
+        "avg_cost_usd_at_list_price": round(cost_usd(avg_in, avg_out, model), 6),
     }
 
 

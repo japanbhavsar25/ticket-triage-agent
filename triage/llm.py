@@ -11,11 +11,11 @@ from langchain_openai import ChatOpenAI
 GROQ_BASE_URL = "https://api.groq.com/openai/v1"
 DEFAULT_MODEL = "openai/gpt-oss-120b"
 BACKUP_MODEL = "openai/gpt-oss-20b"
-# Groq list price for openai/gpt-oss-120b, USD per 1M tokens (console.groq.com/docs/models, 2026-10-25).
-PRICE_PER_M = {"input": 0.15, "output": 0.60}
+# Groq list prices, USD per 1M tokens (input, output), from console.groq.com/docs/models on 2026-10-25.
+PRICES_PER_M = {"openai/gpt-oss-120b": (0.15, 0.60), "openai/gpt-oss-20b": (0.075, 0.30)}
 
 
-def make_llm(model: str | None = None) -> ChatOpenAI:
+def make_llm(model: str | None = None, max_retries: int = 8) -> ChatOpenAI:
     load_dotenv()
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
@@ -26,7 +26,7 @@ def make_llm(model: str | None = None) -> ChatOpenAI:
         api_key=api_key,
         temperature=0,
         reasoning_effort="low",
-        max_retries=8,
+        max_retries=max_retries,
         timeout=60,
     )
 
@@ -54,9 +54,10 @@ class FallbackLLM:
 
 
 def make_demo_llm() -> FallbackLLM:
-    primary = make_llm().model_copy(update={"max_retries": 1})
+    primary = make_llm(max_retries=0)  # on a 429, fall back at once instead of waiting
     return FallbackLLM(primary, make_llm(BACKUP_MODEL))
 
 
-def cost_usd(input_tokens: int, output_tokens: int) -> float:
-    return (input_tokens * PRICE_PER_M["input"] + output_tokens * PRICE_PER_M["output"]) / 1_000_000
+def cost_usd(input_tokens: int, output_tokens: int, model: str = DEFAULT_MODEL) -> float:
+    price_in, price_out = PRICES_PER_M.get(model, PRICES_PER_M[DEFAULT_MODEL])
+    return (input_tokens * price_in + output_tokens * price_out) / 1_000_000

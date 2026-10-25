@@ -115,8 +115,8 @@ if ss.thread:
         st.subheader("3 · Human approval")
         if request:
             st.warning(
-                f"The agent wants to refund **${float(request['amount']):.2f}** on **{request['order_id']}** "
-                f"(over the ${request['threshold']:.0f} limit). Approve?"
+                f"The agent wants to refund **\\${float(request['amount']):.2f}** on **{request['order_id']}** "
+                f"(over the \\${request['threshold']:.0f} limit). Approve?"
             )
             note = st.text_input("Note for the record (optional)")
             ok, no = st.columns(2)
@@ -132,14 +132,14 @@ if ss.thread:
         elif state.get("approvals"):
             for a in state["approvals"]:
                 verdict = "approved ✅" if a["approved"] else "rejected ❌"
-                st.success(f"Refund of ${float(a['amount']):.2f} on {a['order_id']} was {verdict} by you.")
+                st.success(f"Refund of \\${float(a['amount']):.2f} on {a['order_id']} was {verdict} by you.")
         else:
             st.caption(f"Not needed (no refund over ${APPROVAL_THRESHOLD:.0f}).")
 
         st.subheader("4 · Draft reply")
         draft = state.get("draft")
         if draft:
-            st.markdown(draft["reply"])
+            st.markdown(draft["reply"].replace("$", "\\$"))  # "$" would start LaTeX
             if draft["cited_facts"]:
                 st.markdown("**Facts cited**")
                 for i, f in enumerate(draft["cited_facts"], 1):
@@ -155,7 +155,8 @@ if ss.thread:
         st.caption(
             f"Model: {', '.join(sorted({c.get('model') or '?' for c in calls}))} · "
             f"{len(calls)} LLM calls · {tin + tout:,} tokens · {secs:.1f}s of LLM time · "
-            f"≈${cost_usd(tin, tout):.5f} at Groq list price"
+            f"≈${sum(cost_usd(c['input_tokens'], c['output_tokens'], c.get('model') or '') for c in calls):.5f} "
+            "at Groq list price"
         )
         with st.expander("Raw LLM call log"):
             st.code(json.dumps(calls, indent=1))

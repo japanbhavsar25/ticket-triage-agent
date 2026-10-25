@@ -32,7 +32,7 @@ One run of `python eval/run_eval.py` with `openai/gpt-oss-120b` (temperature 0, 
 
 **Where it got things wrong (all 81 rows are in `eval/results/results.jsonl`):**
 
-- **Tool calls (4 misses).** In 2 tickets that gave both an order id and an email, the agent skipped `get_customer`. The policy says to look up every email, probably because `get_order` already gave it what it needed. In 1 such ticket it also didn't issue a valid $19.99 refund. In 1 ticket it misread an email (`priyaa.singh@…`), so the lookup missed.
+- **Tool calls (4 misses).** In 2 tickets that gave both an order id and an email, the agent skipped `get_customer`, even though the policy says to look up every email (probably because `get_order` already gave it what it needed). In 1 such ticket it also didn't issue a valid $19.99 refund. In 1 ticket it misread an email (`priyaa.singh@…`), so the lookup missed.
 - **Urgency (15 misses).** These are mostly disagreements with my own rule-based labels, not clear model errors. 8 polite refund requests that I labelled *low* were rated *medium*, and 5 "my statement doesn't match the price" billing tickets that I labelled *medium* were rated *low*. Real triage would need labels from real support staff.
 
 **Live demo vs. eval:** the eval uses only `gpt-oss-120b`. The live demo falls back to `openai/gpt-oss-20b` when the 120b daily quota is used up, and shows which model answered. The 20b model was **not** evaluated. In a spot check it handled the approval flow correctly but did not add inline `[1]` citations to the reply.
