@@ -1,0 +1,866 @@
+{
+  "customers": [
+    {
+      "customer_id": "C-200",
+      "name": "Aarav Shah",
+      "email": "aarav.shah@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2022-02-21"
+    },
+    {
+      "customer_id": "C-201",
+      "name": "Maya Patel",
+      "email": "maya.patel@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2023-05-17"
+    },
+    {
+      "customer_id": "C-202",
+      "name": "Liam Chen",
+      "email": "liam.chen@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2022-10-13"
+    },
+    {
+      "customer_id": "C-203",
+      "name": "Sofia Garcia",
+      "email": "sofia.garcia@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2025-01-21"
+    },
+    {
+      "customer_id": "C-204",
+      "name": "Noah Kim",
+      "email": "noah.kim@example.com",
+      "plan": "free",
+      "account_status": "locked",
+      "member_since": "2024-05-14"
+    },
+    {
+      "customer_id": "C-205",
+      "name": "Priya Singh",
+      "email": "priya.singh@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2022-03-03"
+    },
+    {
+      "customer_id": "C-206",
+      "name": "Ethan Brown",
+      "email": "ethan.brown@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2023-03-24"
+    },
+    {
+      "customer_id": "C-207",
+      "name": "Zara Ali",
+      "email": "zara.ali@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2024-10-31"
+    },
+    {
+      "customer_id": "C-208",
+      "name": "Omar Rossi",
+      "email": "omar.rossi@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2025-02-23"
+    },
+    {
+      "customer_id": "C-209",
+      "name": "Chloe Mehta",
+      "email": "chloe.mehta@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2025-01-21"
+    },
+    {
+      "customer_id": "C-210",
+      "name": "Kenji Tanaka",
+      "email": "kenji.tanaka@example.com",
+      "plan": "pro",
+      "account_status": "active",
+      "member_since": "2023-03-28"
+    },
+    {
+      "customer_id": "C-211",
+      "name": "Isla Nguyen",
+      "email": "isla.nguyen@example.com",
+      "plan": "pro",
+      "account_status": "active",
+      "member_since": "2023-07-24"
+    },
+    {
+      "customer_id": "C-212",
+      "name": "Mateo Lopez",
+      "email": "mateo.lopez@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2022-11-23"
+    },
+    {
+      "customer_id": "C-213",
+      "name": "Ananya Iyer",
+      "email": "ananya.iyer@example.com",
+      "plan": "pro",
+      "account_status": "locked",
+      "member_since": "2023-11-28"
+    },
+    {
+      "customer_id": "C-214",
+      "name": "Lucas Muller",
+      "email": "lucas.muller@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2022-11-15"
+    },
+    {
+      "customer_id": "C-215",
+      "name": "Fatima Khan",
+      "email": "fatima.khan@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2023-11-21"
+    },
+    {
+      "customer_id": "C-216",
+      "name": "Ravi Rao",
+      "email": "ravi.rao@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2022-07-09"
+    },
+    {
+      "customer_id": "C-217",
+      "name": "Emma Wilson",
+      "email": "emma.wilson@example.com",
+      "plan": "pro",
+      "account_status": "active",
+      "member_since": "2022-07-18"
+    },
+    {
+      "customer_id": "C-218",
+      "name": "Diego Silva",
+      "email": "diego.silva@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2023-12-06"
+    },
+    {
+      "customer_id": "C-219",
+      "name": "Hana Sato",
+      "email": "hana.sato@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2022-03-30"
+    },
+    {
+      "customer_id": "C-220",
+      "name": "Arjun Desai",
+      "email": "arjun.desai@example.com",
+      "plan": "pro",
+      "account_status": "active",
+      "member_since": "2025-01-03"
+    },
+    {
+      "customer_id": "C-221",
+      "name": "Nora Olsen",
+      "email": "nora.olsen@example.com",
+      "plan": "free",
+      "account_status": "active",
+      "member_since": "2024-02-15"
+    },
+    {
+      "customer_id": "C-222",
+      "name": "Felix Weber",
+      "email": "felix.weber@example.com",
+      "plan": "free",
+      "account_status": "locked",
+      "member_since": "2025-02-04"
+    },
+    {
+      "customer_id": "C-223",
+      "name": "Leah Cohen",
+      "email": "leah.cohen@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2024-01-11"
+    },
+    {
+      "customer_id": "C-224",
+      "name": "Sam Park",
+      "email": "sam.park@example.com",
+      "plan": "plus",
+      "account_status": "active",
+      "member_since": "2022-05-23"
+    }
+  ],
+  "orders": [
+    {
+      "order_id": "ORD-1001",
+      "email": "aarav.shah@example.com",
+      "product": "USB-C Charger",
+      "total": 19.99,
+      "status": "delivered",
+      "order_date": "2026-09-19",
+      "delivered_date": "2026-09-23",
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1002",
+      "email": "maya.patel@example.com",
+      "product": "E-Reader",
+      "total": 129.99,
+      "status": "delivered",
+      "order_date": "2026-09-07",
+      "delivered_date": "2026-09-11",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1003",
+      "email": "liam.chen@example.com",
+      "product": "Mechanical Keyboard",
+      "total": 89.99,
+      "status": "processing",
+      "order_date": "2026-10-11",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1004",
+      "email": "sofia.garcia@example.com",
+      "product": "E-Reader",
+      "total": 129.99,
+      "status": "shipped",
+      "order_date": "2026-09-11",
+      "delivered_date": null,
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1005",
+      "email": "noah.kim@example.com",
+      "product": "Noise-Cancelling Headphones",
+      "total": 199.0,
+      "status": "delivered",
+      "order_date": "2026-10-13",
+      "delivered_date": "2026-10-17",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1006",
+      "email": "priya.singh@example.com",
+      "product": "Desk Lamp",
+      "total": 29.95,
+      "status": "delivered",
+      "order_date": "2026-10-09",
+      "delivered_date": "2026-10-13",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1007",
+      "email": "ethan.brown@example.com",
+      "product": "Phone Case",
+      "total": 14.99,
+      "status": "cancelled",
+      "order_date": "2026-09-16",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1008",
+      "email": "zara.ali@example.com",
+      "product": "Phone Case",
+      "total": 14.99,
+      "status": "processing",
+      "order_date": "2026-09-25",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1009",
+      "email": "omar.rossi@example.com",
+      "product": "Mechanical Keyboard",
+      "total": 89.99,
+      "status": "cancelled",
+      "order_date": "2026-09-15",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1010",
+      "email": "chloe.mehta@example.com",
+      "product": "Fitness Tracker",
+      "total": 45.0,
+      "status": "shipped",
+      "order_date": "2026-09-04",
+      "delivered_date": null,
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1011",
+      "email": "kenji.tanaka@example.com",
+      "product": "E-Reader",
+      "total": 129.99,
+      "status": "delivered",
+      "order_date": "2026-09-21",
+      "delivered_date": "2026-09-25",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1012",
+      "email": "isla.nguyen@example.com",
+      "product": "Mechanical Keyboard",
+      "total": 89.99,
+      "status": "delivered",
+      "order_date": "2026-09-14",
+      "delivered_date": "2026-09-18",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1013",
+      "email": "mateo.lopez@example.com",
+      "product": "Desk Lamp",
+      "total": 29.95,
+      "status": "shipped",
+      "order_date": "2026-09-14",
+      "delivered_date": null,
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1014",
+      "email": "ananya.iyer@example.com",
+      "product": "Webcam HD",
+      "total": 59.99,
+      "status": "shipped",
+      "order_date": "2026-10-12",
+      "delivered_date": null,
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1015",
+      "email": "lucas.muller@example.com",
+      "product": "Phone Case",
+      "total": 14.99,
+      "status": "delivered",
+      "order_date": "2026-09-09",
+      "delivered_date": "2026-09-13",
+      "carrier": "UPS",
+      "refunded_amount": 14.99
+    },
+    {
+      "order_id": "ORD-1016",
+      "email": "fatima.khan@example.com",
+      "product": "Desk Lamp",
+      "total": 29.95,
+      "status": "cancelled",
+      "order_date": "2026-10-05",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1017",
+      "email": "ravi.rao@example.com",
+      "product": "Mechanical Keyboard",
+      "total": 89.99,
+      "status": "shipped",
+      "order_date": "2026-10-08",
+      "delivered_date": null,
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1018",
+      "email": "emma.wilson@example.com",
+      "product": "Noise-Cancelling Headphones",
+      "total": 199.0,
+      "status": "delivered",
+      "order_date": "2026-09-09",
+      "delivered_date": "2026-09-13",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1019",
+      "email": "diego.silva@example.com",
+      "product": "Webcam HD",
+      "total": 59.99,
+      "status": "delivered",
+      "order_date": "2026-09-04",
+      "delivered_date": "2026-09-08",
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1020",
+      "email": "hana.sato@example.com",
+      "product": "Phone Case",
+      "total": 14.99,
+      "status": "delivered",
+      "order_date": "2026-10-14",
+      "delivered_date": "2026-10-18",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1021",
+      "email": "arjun.desai@example.com",
+      "product": "Portable SSD 1TB",
+      "total": 109.0,
+      "status": "delivered",
+      "order_date": "2026-09-25",
+      "delivered_date": "2026-09-29",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1022",
+      "email": "nora.olsen@example.com",
+      "product": "Portable SSD 1TB",
+      "total": 109.0,
+      "status": "processing",
+      "order_date": "2026-10-04",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1023",
+      "email": "felix.weber@example.com",
+      "product": "Mechanical Keyboard",
+      "total": 89.99,
+      "status": "cancelled",
+      "order_date": "2026-09-01",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1024",
+      "email": "leah.cohen@example.com",
+      "product": "Fitness Tracker",
+      "total": 45.0,
+      "status": "delivered",
+      "order_date": "2026-10-14",
+      "delivered_date": "2026-10-18",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1025",
+      "email": "sam.park@example.com",
+      "product": "Robot Vacuum",
+      "total": 279.0,
+      "status": "delivered",
+      "order_date": "2026-10-12",
+      "delivered_date": "2026-10-16",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1026",
+      "email": "aarav.shah@example.com",
+      "product": "Wireless Mouse",
+      "total": 24.5,
+      "status": "delivered",
+      "order_date": "2026-09-28",
+      "delivered_date": "2026-10-02",
+      "carrier": "UPS",
+      "refunded_amount": 24.5
+    },
+    {
+      "order_id": "ORD-1027",
+      "email": "maya.patel@example.com",
+      "product": "Webcam HD",
+      "total": 59.99,
+      "status": "delivered",
+      "order_date": "2026-09-17",
+      "delivered_date": "2026-09-21",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1028",
+      "email": "liam.chen@example.com",
+      "product": "Robot Vacuum",
+      "total": 279.0,
+      "status": "delivered",
+      "order_date": "2026-10-03",
+      "delivered_date": "2026-10-07",
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1029",
+      "email": "sofia.garcia@example.com",
+      "product": "E-Reader",
+      "total": 129.99,
+      "status": "delivered",
+      "order_date": "2026-10-11",
+      "delivered_date": "2026-10-15",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1030",
+      "email": "noah.kim@example.com",
+      "product": "Portable SSD 1TB",
+      "total": 109.0,
+      "status": "delivered",
+      "order_date": "2026-09-10",
+      "delivered_date": "2026-09-14",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1031",
+      "email": "priya.singh@example.com",
+      "product": "Robot Vacuum",
+      "total": 279.0,
+      "status": "delivered",
+      "order_date": "2026-10-05",
+      "delivered_date": "2026-10-09",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1032",
+      "email": "ethan.brown@example.com",
+      "product": "USB-C Charger",
+      "total": 19.99,
+      "status": "shipped",
+      "order_date": "2026-10-02",
+      "delivered_date": null,
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1033",
+      "email": "zara.ali@example.com",
+      "product": "Wireless Mouse",
+      "total": 24.5,
+      "status": "shipped",
+      "order_date": "2026-09-20",
+      "delivered_date": null,
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1034",
+      "email": "omar.rossi@example.com",
+      "product": "USB-C Charger",
+      "total": 19.99,
+      "status": "delivered",
+      "order_date": "2026-10-07",
+      "delivered_date": "2026-10-11",
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1035",
+      "email": "chloe.mehta@example.com",
+      "product": "Wireless Mouse",
+      "total": 24.5,
+      "status": "processing",
+      "order_date": "2026-09-05",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1036",
+      "email": "kenji.tanaka@example.com",
+      "product": "Robot Vacuum",
+      "total": 279.0,
+      "status": "cancelled",
+      "order_date": "2026-09-09",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1037",
+      "email": "isla.nguyen@example.com",
+      "product": "Phone Case",
+      "total": 14.99,
+      "status": "processing",
+      "order_date": "2026-10-06",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1038",
+      "email": "mateo.lopez@example.com",
+      "product": "Phone Case",
+      "total": 14.99,
+      "status": "delivered",
+      "order_date": "2026-10-04",
+      "delivered_date": "2026-10-08",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1039",
+      "email": "ananya.iyer@example.com",
+      "product": "Smart Watch",
+      "total": 149.5,
+      "status": "delivered",
+      "order_date": "2026-10-05",
+      "delivered_date": "2026-10-09",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1040",
+      "email": "lucas.muller@example.com",
+      "product": "Desk Lamp",
+      "total": 29.95,
+      "status": "delivered",
+      "order_date": "2026-10-16",
+      "delivered_date": "2026-10-20",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1041",
+      "email": "fatima.khan@example.com",
+      "product": "Smart Watch",
+      "total": 149.5,
+      "status": "shipped",
+      "order_date": "2026-09-29",
+      "delivered_date": null,
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1042",
+      "email": "ravi.rao@example.com",
+      "product": "Webcam HD",
+      "total": 59.99,
+      "status": "delivered",
+      "order_date": "2026-09-16",
+      "delivered_date": "2026-09-20",
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1043",
+      "email": "emma.wilson@example.com",
+      "product": "Wireless Mouse",
+      "total": 24.5,
+      "status": "shipped",
+      "order_date": "2026-09-02",
+      "delivered_date": null,
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1044",
+      "email": "diego.silva@example.com",
+      "product": "Laptop Stand",
+      "total": 34.0,
+      "status": "delivered",
+      "order_date": "2026-10-08",
+      "delivered_date": "2026-10-12",
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1045",
+      "email": "hana.sato@example.com",
+      "product": "USB-C Charger",
+      "total": 19.99,
+      "status": "delivered",
+      "order_date": "2026-10-16",
+      "delivered_date": "2026-10-20",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1046",
+      "email": "arjun.desai@example.com",
+      "product": "USB-C Charger",
+      "total": 19.99,
+      "status": "delivered",
+      "order_date": "2026-09-05",
+      "delivered_date": "2026-09-09",
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1047",
+      "email": "nora.olsen@example.com",
+      "product": "E-Reader",
+      "total": 129.99,
+      "status": "shipped",
+      "order_date": "2026-09-05",
+      "delivered_date": null,
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1048",
+      "email": "felix.weber@example.com",
+      "product": "Bluetooth Speaker",
+      "total": 49.0,
+      "status": "delivered",
+      "order_date": "2026-10-13",
+      "delivered_date": "2026-10-17",
+      "carrier": "FedEx",
+      "refunded_amount": 49.0
+    },
+    {
+      "order_id": "ORD-1049",
+      "email": "leah.cohen@example.com",
+      "product": "Bluetooth Speaker",
+      "total": 49.0,
+      "status": "cancelled",
+      "order_date": "2026-09-09",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1050",
+      "email": "sam.park@example.com",
+      "product": "Desk Lamp",
+      "total": 29.95,
+      "status": "processing",
+      "order_date": "2026-09-16",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1051",
+      "email": "aarav.shah@example.com",
+      "product": "Robot Vacuum",
+      "total": 279.0,
+      "status": "processing",
+      "order_date": "2026-09-27",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1052",
+      "email": "maya.patel@example.com",
+      "product": "Bluetooth Speaker",
+      "total": 49.0,
+      "status": "delivered",
+      "order_date": "2026-09-07",
+      "delivered_date": "2026-09-11",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1053",
+      "email": "liam.chen@example.com",
+      "product": "Smart Watch",
+      "total": 149.5,
+      "status": "shipped",
+      "order_date": "2026-09-28",
+      "delivered_date": null,
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1054",
+      "email": "sofia.garcia@example.com",
+      "product": "Webcam HD",
+      "total": 59.99,
+      "status": "delivered",
+      "order_date": "2026-10-14",
+      "delivered_date": "2026-10-18",
+      "carrier": "DHL",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1055",
+      "email": "noah.kim@example.com",
+      "product": "Fitness Tracker",
+      "total": 45.0,
+      "status": "delivered",
+      "order_date": "2026-09-04",
+      "delivered_date": "2026-09-08",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1056",
+      "email": "priya.singh@example.com",
+      "product": "Desk Lamp",
+      "total": 29.95,
+      "status": "shipped",
+      "order_date": "2026-09-07",
+      "delivered_date": null,
+      "carrier": "UPS",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1057",
+      "email": "ethan.brown@example.com",
+      "product": "Bluetooth Speaker",
+      "total": 49.0,
+      "status": "delivered",
+      "order_date": "2026-10-05",
+      "delivered_date": "2026-10-09",
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1058",
+      "email": "zara.ali@example.com",
+      "product": "Phone Case",
+      "total": 14.99,
+      "status": "shipped",
+      "order_date": "2026-09-12",
+      "delivered_date": null,
+      "carrier": "FedEx",
+      "refunded_amount": 0.0
+    },
+    {
+      "order_id": "ORD-1059",
+      "email": "omar.rossi@example.com",
+      "product": "Webcam HD",
+      "total": 59.99,
+      "status": "delivered",
+      "order_date": "2026-09-05",
+      "delivered_date": "2026-09-09",
+      "carrier": "FedEx",
+      "refunded_amount": 59.99
+    },
+    {
+      "order_id": "ORD-1060",
+      "email": "chloe.mehta@example.com",
+      "product": "Robot Vacuum",
+      "total": 279.0,
+      "status": "cancelled",
+      "order_date": "2026-09-07",
+      "delivered_date": null,
+      "carrier": null,
+      "refunded_amount": 0.0
+    }
+  ]
+}
