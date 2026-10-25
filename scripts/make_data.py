@@ -70,21 +70,22 @@ LAST = [
     "Cohen",
     "Park",
 ]
-PRODUCTS = {
-    "USB-C Charger": 19.99,
-    "Wireless Mouse": 24.50,
-    "Phone Case": 14.99,
-    "Bluetooth Speaker": 49.00,
-    "Mechanical Keyboard": 89.99,
-    "Noise-Cancelling Headphones": 199.00,
-    "Smart Watch": 149.50,
-    "Webcam HD": 59.99,
-    "Laptop Stand": 34.00,
-    "Portable SSD 1TB": 109.00,
-    "Fitness Tracker": 45.00,
-    "Desk Lamp": 29.95,
-    "Robot Vacuum": 279.00,
-    "E-Reader": 129.99,
+APPROVAL_THRESHOLD = 5000  # rupees; must match triage/graph.py
+PRODUCTS = {  # prices in Indian rupees (INR)
+    "USB-C Charger": 1299.0,
+    "Wireless Mouse": 899.0,
+    "Phone Case": 499.0,
+    "Bluetooth Speaker": 3999.0,
+    "Mechanical Keyboard": 5499.0,
+    "Noise-Cancelling Headphones": 14999.0,
+    "Smart Watch": 12499.0,
+    "Webcam HD": 5999.0,
+    "Laptop Stand": 1499.0,
+    "Portable SSD 1TB": 8999.0,
+    "Fitness Tracker": 2999.0,
+    "Desk Lamp": 1199.0,
+    "Robot Vacuum": 22999.0,
+    "E-Reader": 10999.0,
 }
 
 
@@ -137,8 +138,8 @@ def make_tickets(store: dict) -> list[dict]:
     }
     deliv_open = [o for o in by_status["delivered"] if o["refunded_amount"] == 0]
     deliv_refunded = [o for o in by_status["delivered"] if o["refunded_amount"] > 0]
-    small = [o for o in deliv_open if o["total"] <= 50]
-    big = [o for o in deliv_open if o["total"] > 50]
+    small = [o for o in deliv_open if o["total"] <= APPROVAL_THRESHOLD]
+    big = [o for o in deliv_open if o["total"] > APPROVAL_THRESHOLD]
     not_delivered = by_status["shipped"] + by_status["processing"]
     tickets: list[dict] = []
 
@@ -154,7 +155,7 @@ def make_tickets(store: dict) -> list[dict]:
                 "product": product,
                 "expected_tools": calls,
                 "refund_amount": refund_amount,
-                "needs_approval": refund_amount is not None and refund_amount > 50,
+                "needs_approval": refund_amount is not None and refund_amount > APPROVAL_THRESHOLD,
             }
         )
 
@@ -183,9 +184,9 @@ def make_tickets(store: dict) -> list[dict]:
 
     # ---- refund: partial amount stated ----
     for o in big[8:11] + small[6:8]:
-        amt = round(o["total"] / 2, 2) if o["total"] > 50 else 10.0
+        amt = float(o["total"] // 2) if o["total"] > APPROVAL_THRESHOLD else 500.0
         add(
-            f"Order {o['order_id']} - the {o['product']} is missing a part. Could you refund ${amt:.2f} of the price? I'll keep it.",
+            f"Order {o['order_id']} - the {o['product']} is missing a part. Could you refund ₹{amt:,.0f} of the price? I'll keep it.",
             "refund",
             "low",
             [call("get_order", order_id=o["order_id"]), call("issue_refund", order_id=o["order_id"], amount=amt)],
@@ -240,7 +241,7 @@ def make_tickets(store: dict) -> list[dict]:
         )
     for o in small[9:11]:
         add(
-            f"Refund ${o['total'] + 100:.2f} for order {o['order_id']} for all the trouble the {o['product']} caused me.",
+            f"Refund ₹{o['total'] + 10000:,.0f} for order {o['order_id']} for all the trouble the {o['product']} caused me.",
             "refund",
             "medium",
             [call("get_order", order_id=o["order_id"])],

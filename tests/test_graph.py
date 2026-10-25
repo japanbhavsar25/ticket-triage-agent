@@ -18,13 +18,13 @@ def make(store_data, triage, turns, drafts=(OK_DRAFT,)):
 def test_small_refund_runs_without_pause(store_data):
     turns = [
         tool_turn(("get_order", {"order_id": "ORD-1"})),
-        tool_turn(("issue_refund", {"order_id": "ORD-1", "amount": 20.0})),
+        tool_turn(("issue_refund", {"order_id": "ORD-1", "amount": 1299.0})),
         DONE,
     ]
     graph, store, _ = make(store_data, REFUND, turns)
     out = run_ticket(graph, "refund ORD-1", "t1")
     assert out["pauses"] == []
-    assert store.refunds[0]["amount"] == 20.0
+    assert store.refunds[0]["amount"] == 1299.0
     assert [e["name"] for e in out["tool_log"]] == ["get_order", "issue_refund"]
     assert out["draft"]["reply"] == "Done [1]."
 
@@ -32,7 +32,7 @@ def test_small_refund_runs_without_pause(store_data):
 def test_big_refund_pauses_and_approval_issues_it(store_data):
     turns = [
         tool_turn(("get_order", {"order_id": "ORD-2"})),
-        tool_turn(("issue_refund", {"order_id": "ORD-2", "amount": 199.0})),
+        tool_turn(("issue_refund", {"order_id": "ORD-2", "amount": 14999.0})),
         DONE,
     ]
     graph, store, _ = make(store_data, REFUND, turns)
@@ -40,7 +40,7 @@ def test_big_refund_pauses_and_approval_issues_it(store_data):
     graph.invoke({"ticket": "refund ORD-2"}, config)
 
     req = pending_interrupt(graph, config)
-    assert req["type"] == "refund_approval" and req["amount"] == 199.0
+    assert req["type"] == "refund_approval" and req["amount"] == 14999.0
     assert store.refunds == []  # nothing happens until a human decides
 
     graph.invoke(Command(resume={"approved": True}), config)
@@ -49,7 +49,7 @@ def test_big_refund_pauses_and_approval_issues_it(store_data):
 
 
 def test_big_refund_rejected_by_human(store_data):
-    turns = [tool_turn(("issue_refund", {"order_id": "ORD-2", "amount": 199.0})), DONE]
+    turns = [tool_turn(("issue_refund", {"order_id": "ORD-2", "amount": 14999.0})), DONE]
     graph, store, _ = make(store_data, REFUND, turns)
     out = run_ticket(graph, "refund ORD-2", "t3", approve=lambda req: False)
     assert out["pauses"][0]["approved"] is False
@@ -82,7 +82,7 @@ def test_refund_outcome_and_check_draft():
         {
             "name": "issue_refund",
             "args": {"order_id": "ORD-1"},
-            "result": {"success": True, "refund_id": "RF-0001", "order_id": "ORD-1", "amount": 20.0},
+            "result": {"success": True, "refund_id": "RF-0001", "order_id": "ORD-1", "amount": 1299.0},
         }
     ]
     assert "RF-0001" in refund_outcome(log)

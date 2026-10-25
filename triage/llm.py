@@ -58,6 +58,10 @@ def make_demo_llm() -> FallbackLLM:
     return FallbackLLM(primary, make_llm(BACKUP_MODEL))
 
 
+# Approximate rate for showing costs in rupees (Pluang converter, 2026-10-25). Groq bills in USD.
+USD_TO_INR = 96.5
+
+
 def cost_usd(input_tokens: int, output_tokens: int, model: str = DEFAULT_MODEL) -> float:
     price_in, price_out = PRICES_PER_M.get(model, PRICES_PER_M[DEFAULT_MODEL])
     return (input_tokens * price_in + output_tokens * price_out) / 1_000_000

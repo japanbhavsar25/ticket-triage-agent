@@ -4,7 +4,7 @@
     python eval/run_eval.py --limit 10   # quick smoke run
 
 Every refund approval request is auto-approved here; the metric checks that the
-agent paused exactly when it should (refund > $50), not what the human decided.
+agent paused exactly when it should (refund > ₹5,000), not what the human decided.
 Writes eval/results/results.jsonl (per ticket) and eval/results/summary.json.
 """
 
@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from triage.graph import build_graph, run_ticket  # noqa: E402
-from triage.llm import cost_usd, make_llm  # noqa: E402
+from triage.llm import USD_TO_INR, cost_usd, make_llm  # noqa: E402
 from triage.store import Store  # noqa: E402
 
 TOKENS_PER_MINUTE = 8000  # Groq free-tier limit we measured from the x-ratelimit headers
@@ -115,6 +115,7 @@ def summarize(rows: list[dict], model: str) -> dict:
         "avg_input_tokens": round(avg_in),
         "avg_output_tokens": round(avg_out),
         "avg_cost_usd_at_list_price": round(cost_usd(avg_in, avg_out, model), 6),
+        "avg_cost_inr_approx": round(cost_usd(avg_in, avg_out, model) * USD_TO_INR, 4),
     }
 
 

@@ -10,7 +10,7 @@ import streamlit as st
 from langgraph.types import Command
 
 from triage.graph import APPROVAL_THRESHOLD, build_graph, pending_interrupt
-from triage.llm import cost_usd, make_demo_llm
+from triage.llm import USD_TO_INR, cost_usd, make_demo_llm
 from triage.store import Store
 
 MAX_RUNS_PER_SESSION = 15  # protects the shared free-tier Groq key
@@ -53,7 +53,7 @@ st.caption(
     "A LangGraph agent on Groq (`openai/gpt-oss-120b`, falling back to `gpt-oss-20b` when the free daily "
     "quota runs out). It classifies the ticket, looks up a fake "
     f"order/customer database with tools, **pauses for your approval before any refund over "
-    f"${APPROVAL_THRESHOLD:.0f}**, then drafts a reply that cites the facts it used."
+    f"₹{APPROVAL_THRESHOLD:,.0f}**, then drafts a reply that cites the facts it used."
 )
 
 with st.sidebar:
@@ -61,7 +61,7 @@ with st.sidebar:
     choice = st.radio("Example tickets", list(EXAMPLES), label_visibility="collapsed")
     st.divider()
     st.subheader("Fake database")
-    st.caption("Orders ORD-1001 … ORD-1060, customers like aarav.shah@example.com. Data is made up.")
+    st.caption("Orders ORD-1001 … ORD-1060, customers like aarav.shah@example.com. Prices in ₹. Data is made up.")
     with st.expander("Browse orders"):
         st.dataframe(
             [
@@ -115,8 +115,8 @@ if ss.thread:
         st.subheader("3 · Human approval")
         if request:
             st.warning(
-                f"The agent wants to refund **\\${float(request['amount']):.2f}** on **{request['order_id']}** "
-                f"(over the \\${request['threshold']:.0f} limit). Approve?"
+                f"The agent wants to refund **₹{float(request['amount']):,.2f}** on **{request['order_id']}** "
+                f"(over the ₹{request['threshold']:,.0f} limit). Approve?"
             )
             note = st.text_input("Note for the record (optional)")
             ok, no = st.columns(2)
@@ -132,9 +132,9 @@ if ss.thread:
         elif state.get("approvals"):
             for a in state["approvals"]:
                 verdict = "approved ✅" if a["approved"] else "rejected ❌"
-                st.success(f"Refund of \\${float(a['amount']):.2f} on {a['order_id']} was {verdict} by you.")
+                st.success(f"Refund of ₹{float(a['amount']):,.2f} on {a['order_id']} was {verdict} by you.")
         else:
-            st.caption(f"Not needed (no refund over ${APPROVAL_THRESHOLD:.0f}).")
+            st.caption(f"Not needed (no refund over ₹{APPROVAL_THRESHOLD:,.0f}).")
 
         st.subheader("4 · Draft reply")
         draft = state.get("draft")
@@ -152,11 +152,11 @@ if ss.thread:
         tin = sum(c["input_tokens"] for c in calls)
         tout = sum(c["output_tokens"] for c in calls)
         secs = sum(c["seconds"] for c in calls)
+        usd = sum(cost_usd(c["input_tokens"], c["output_tokens"], c.get("model") or "") for c in calls)
         st.caption(
             f"Model: {', '.join(sorted({c.get('model') or '?' for c in calls}))} · "
             f"{len(calls)} LLM calls · {tin + tout:,} tokens · {secs:.1f}s of LLM time · "
-            f"≈${sum(cost_usd(c['input_tokens'], c['output_tokens'], c.get('model') or '') for c in calls):.5f} "
-            "at Groq list price"
+            f"≈₹{usd * USD_TO_INR:.3f} (${usd:.5f}) at Groq list price"
         )
         with st.expander("Raw LLM call log"):
             st.code(json.dumps(calls, indent=1))

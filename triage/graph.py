@@ -2,7 +2,7 @@
 
     classify -> agent <-> tools -> draft
                   |        ^
-                  +-> approval   (human-in-the-loop pause for refunds over $50)
+                  +-> approval   (human-in-the-loop pause for refunds over ₹5,000)
 
 The approval rule lives in code (route_after_agent), not in the prompt, so the
 LLM cannot skip it.
@@ -26,7 +26,7 @@ from . import prompts
 from .schemas import Draft, Triage
 from .store import Store
 
-APPROVAL_THRESHOLD = 50.0
+APPROVAL_THRESHOLD = 5000.0  # Indian rupees (INR)
 MAX_AGENT_TURNS = 4
 
 TOOLS = [
@@ -58,7 +58,7 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "issue_refund",
-            "description": "Refund an amount in USD on a delivered order.",
+            "description": "Refund an amount in Indian rupees (INR) on a delivered order.",
             "parameters": {
                 "type": "object",
                 "properties": {"order_id": {"type": "string"}, "amount": {"type": "number"}},
@@ -288,7 +288,7 @@ def refund_outcome(tool_log: list[dict]) -> str:
             continue
         r = entry["result"]
         if r.get("success"):
-            lines.append(f"Refund {r['refund_id']} of ${r['amount']:.2f} was issued on {r['order_id']}.")
+            lines.append(f"Refund {r['refund_id']} of ₹{r['amount']:,.2f} was issued on {r['order_id']}.")
         else:
             lines.append(f"A refund on {entry['args'].get('order_id')} was NOT issued: {r.get('error')}.")
     return " ".join(lines) or "No refund was issued for this ticket. Do not say or imply that one was."

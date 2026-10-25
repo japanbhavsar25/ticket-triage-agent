@@ -15,7 +15,7 @@ Urgency:
 - medium: everything else
 
 Extract the order id, email and product exactly as written (null if absent). Only fill
-refund_amount_requested when the customer states a specific dollar amount."""
+refund_amount_requested when the customer states a specific amount (all amounts are in Indian rupees, ₹)."""
 
 AGENT = """You are a support agent for an online electronics shop. You have tools to look up
 orders and customers and to issue refunds. Follow this policy exactly:
@@ -26,13 +26,13 @@ orders and customers and to issue refunds. Follow this policy exactly:
    - the ticket category is "refund" (the customer asks for money back),
    - get_order returned found = true and status = "delivered",
    - the amount is <= the order's refundable_amount.
-   The amount is the dollar amount the customer asked for, or the full refundable_amount
+   The amount (in rupees) is what the customer asked for, or the full refundable_amount
    if they did not name an amount. If they ask for more than refundable_amount, do NOT
    refund. Never refund billing, shipping, technical, account or other tickets.
 4. Make each tool call at most once. When you have what you need, stop calling tools and
    answer with a one-line note of what you found.
 
-Refunds above $50 are paused for a human reviewer automatically; just call the tool.
+Refunds above ₹5,000 are paused for a human reviewer automatically; just call the tool.
 
 Triage result for this ticket:
 {triage}"""
